@@ -80,6 +80,18 @@
     }
     @media (max-width: 520px) { .features { grid-template-columns: 1fr; } }
     .top-right { display: flex; align-items: center; gap: 18px; }
+    .news { margin-top: 32px; border: 1px solid var(--rule); border-radius: 4px; background: var(--night-2); overflow: hidden; }
+    .news-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--rule); font: 500 11px var(--mono); color: var(--faint); letter-spacing: .1em; text-transform: uppercase; }
+    .news-head .live { color: var(--up); }
+    .news-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 16px; border-bottom: 1px solid var(--rule); }
+    .news-row:last-child { border-bottom: 0; }
+    .news-row time { font: 400 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 2px; }
+    .news-row b { display: block; font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .news-row small { color: var(--faint); font-size: 12px; }
+    .badge { white-space: nowrap; border: 1px solid; border-radius: 3px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+    .badge.ok { color: var(--up); } .badge.rep { color: #9aacc6; }
+    .news-empty { padding: 16px; color: var(--faint); font-size: 13px; }
+    @media (max-width: 520px) { .news-row { grid-template-columns: 44px minmax(0, 1fr); } .news-row .badge { grid-column: 2; justify-self: start; } }
     .lang { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
     .lang button { background: none; border: 0; color: var(--muted); font: 500 12px var(--mono); letter-spacing: .08em; padding: 6px 10px; cursor: pointer; }
     .lang button[aria-pressed="true"] { background: var(--gold); color: var(--night); }
@@ -112,6 +124,11 @@
 
       <div class="themes">
         <span data-t="th1">Géopolitique</span><span data-t="th2">Pétrole</span><span data-t="th3">Inflation</span><span data-t="th4">Banques centrales</span><span data-t="th5">Obligations</span><span data-t="th6">Actions</span><span data-t="th7">Or et devises</span>
+      </div>
+
+      <div class="news" aria-live="polite">
+        <div class="news-head"><span data-t="newsTitle">Dernières actualités</span><span class="live" data-t="newsLive">● Mis à jour toutes les heures</span></div>
+        <div id="news-list"><div class="news-empty" data-t="newsLoading">Chargement des actualités…</div></div>
       </div>
     </section>
 
@@ -185,6 +202,8 @@
         rate: "Trop d'inscriptions en ce moment. Réessayez dans quelques minutes.",
         login: 'Compte créé, mais la connexion a échoué. Connectez-vous depuis la page de connexion.',
         failed: "L'inscription n'a pas abouti. Vérifiez votre connexion et réessayez.",
+        newsTitle: 'Dernières actualités', newsLive: '● Mis à jour toutes les heures', newsLoading: 'Chargement des actualités…', newsNone: 'Les actualités du jour s\'affichent ici dès la prochaine collecte.',
+        corroborated: '● Corroboré', reported: '○ Rapporté', contested: '◐ Contesté', corrected: '◆ Corrigé', src1: 'source', srcN: 'sources',
       },
       en: {
         title: 'Join GeoMarket Live', signin: 'Sign in', kicker: 'Geopolitics and markets watch',
@@ -208,6 +227,8 @@
         rate: 'Too many sign-ups right now. Please try again in a few minutes.',
         login: 'Account created, but signing in failed. Please sign in from the sign-in page.',
         failed: 'Sign-up did not go through. Check your connection and try again.',
+        newsTitle: 'Latest news', newsLive: '● Updated every hour', newsLoading: 'Loading the news…', newsNone: 'Today\'s news appears here after the next collection.',
+        corroborated: '● Corroborated', reported: '○ Reported', contested: '◐ Contested', corrected: '◆ Corrected', src1: 'source', srcN: 'sources',
       },
     };
     const store = { get: () => { try { return localStorage.getItem('gml.lang'); } catch { return null; } }, set: (v) => { try { localStorage.setItem('gml.lang', v); } catch {} } };
@@ -229,7 +250,27 @@
       document.querySelectorAll('[data-toggle]').forEach((b) => { b.textContent = $(b.dataset.toggle).type === 'password' ? t('show') : t('hide'); });
       document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
       $('err').textContent = '';
+      loadNews();
     }
+    // ---------- Dernières actualités réelles, dans la langue choisie ----------
+    const esc = (x) => String(x ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let newsSeq = 0;
+    async function loadNews() {
+      if (!sb) return;
+      const seq = ++newsSeq, l = lang;
+      const { data, error } = await sb.rpc('public_latest_news', { p_lang: l, p_limit: 6 });
+      if (seq !== newsSeq) return;
+      const box = $('news-list');
+      if (error || !data?.length) { box.innerHTML = `<div class="news-empty">${esc(t('newsNone'))}</div>`; return; }
+      const fmt = new Intl.DateTimeFormat(l === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit', timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+      box.innerHTML = data.map((n) => {
+        const st = n.status === 'corroborated' ? 'ok' : 'rep';
+        const meta = [n.category, n.country, `${n.sources} ${n.sources > 1 ? t('srcN') : t('src1')}`].filter(Boolean).map(esc).join(' · ');
+        return `<div class="news-row"><time>${fmt.format(new Date(n.published_at))}</time><div><b>${esc(n.title)}</b><small>${meta}</small></div><span class="badge ${st}">${esc(t(n.status) ?? n.status)}</span></div>`;
+      }).join('');
+    }
+    setInterval(() => { if (!document.hidden) loadNews(); }, 5 * 60 * 1000);
+
     document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang, true)));
     setLang(initial(), false);
 
