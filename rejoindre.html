@@ -79,101 +79,184 @@
       .top, footer { padding-left: 16px; padding-right: 16px; }
     }
     @media (max-width: 520px) { .features { grid-template-columns: 1fr; } }
+    .top-right { display: flex; align-items: center; gap: 18px; }
+    .lang { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
+    .lang button { background: none; border: 0; color: var(--muted); font: 500 12px var(--mono); letter-spacing: .08em; padding: 6px 10px; cursor: pointer; }
+    .lang button[aria-pressed="true"] { background: var(--gold); color: var(--night); }
+    .lang button:focus-visible, .link-btn:focus-visible, .btn:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
   </style>
 </head>
 <body>
   <header class="top">
     <a class="brand" href="/geomarket-live-app/">GEOMARKET<small>LIVE</small></a>
-    <a class="link-btn" href="/geomarket-live-app/connexion">Se connecter</a>
+    <div class="top-right">
+      <div class="lang" role="group" aria-label="Langue / Language">
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="link-btn" href="/geomarket-live-app/connexion" data-t="signin">Se connecter</a>
+    </div>
   </header>
 
   <main class="wrap">
     <section>
-      <div class="kicker">Veille géopolitique et marchés</div>
-      <h1>Ce qui se passe dans le monde, et <em>ce que cela change</em> sur les marchés.</h1>
-      <p class="lead">GeoMarket Live rassemble l'actualité internationale et les marchés financiers dans un seul tableau de bord. Chaque événement est sourcé, recoupé et relié aux actifs qu'il peut faire bouger.</p>
+      <div class="kicker" data-t="kicker">Veille géopolitique et marchés</div>
+      <h1 data-t="h1" data-html>Ce qui se passe dans le monde, et <em>ce que cela change</em> sur les marchés.</h1>
+      <p class="lead" data-t="lead">GeoMarket Live rassemble l'actualité internationale et les marchés financiers dans un seul tableau de bord. Chaque événement est sourcé, recoupé et relié aux actifs qu'il peut faire bouger.</p>
 
       <div class="features">
-        <div class="feat"><h3><span>01</span>Actualités vérifiées</h3><p>Mises à jour toutes les heures, à partir de grands médias et d'institutions comme la BCE, la Fed ou l'ONU. Chaque événement indique s'il est rapporté ou corroboré.</p></div>
-        <div class="feat"><h3><span>02</span>Les marchés qui comptent</h3><p>Pétrole, or, devises, taux souverains et grands indices, à partir de sources officielles.</p></div>
-        <div class="feat"><h3><span>03</span>Alertes personnalisées</h3><p>Fixez vos seuils sur un actif, un thème ou une publication économique. GeoMarket Live vous prévient.</p></div>
-        <div class="feat"><h3><span>04</span>Votre liste de suivi</h3><p>Gardez vos actifs sous les yeux, cherchez un titre par son code ISIN et consultez le calendrier économique.</p></div>
+        <div class="feat"><h3><span>01</span><b data-t="f1t">Actualités vérifiées</b></h3><p data-t="f1">Mises à jour toutes les heures, à partir de grands médias et d'institutions comme la BCE, la Fed ou l'ONU. Chaque événement indique s'il est rapporté ou corroboré.</p></div>
+        <div class="feat"><h3><span>02</span><b data-t="f2t">Les marchés qui comptent</b></h3><p data-t="f2">Pétrole, or, devises, taux souverains et grands indices, à partir de sources officielles.</p></div>
+        <div class="feat"><h3><span>03</span><b data-t="f3t">Alertes personnalisées</b></h3><p data-t="f3">Fixez vos seuils sur un actif, un thème ou une publication économique. GeoMarket Live vous prévient.</p></div>
+        <div class="feat"><h3><span>04</span><b data-t="f4t">Votre liste de suivi</b></h3><p data-t="f4">Gardez vos actifs sous les yeux, cherchez un titre par son code ISIN et consultez le calendrier économique.</p></div>
       </div>
 
       <div class="themes">
-        <span>Géopolitique</span><span>Pétrole</span><span>Inflation</span><span>Banques centrales</span><span>Obligations</span><span>Actions</span><span>Or et devises</span>
+        <span data-t="th1">Géopolitique</span><span data-t="th2">Pétrole</span><span data-t="th3">Inflation</span><span data-t="th4">Banques centrales</span><span data-t="th5">Obligations</span><span data-t="th6">Actions</span><span data-t="th7">Or et devises</span>
       </div>
     </section>
 
     <aside class="panel" id="panel">
       <div id="form-view">
         <div id="already" class="already" hidden>
-          <p>Vous êtes déjà connecté avec <b id="already-email"></b>.</p>
-          <div class="already-actions"><a class="btn btn-sm" href="/geomarket-live-app/">Ouvrir l'application</a><button type="button" class="link-btn" id="logout">Se déconnecter pour créer un autre compte</button></div>
+          <p><span data-t="already">Vous êtes déjà connecté avec</span> <b id="already-email"></b>.</p>
+          <div class="already-actions"><a class="btn btn-sm" href="/geomarket-live-app/" data-t="openApp">Ouvrir l'application</a><button type="button" class="link-btn" id="logout" data-t="logout">Se déconnecter pour créer un autre compte</button></div>
         </div>
-        <h2>Créer votre compte</h2>
-        <p class="sub">Gratuit, en une minute. Ordinateur et téléphone.</p>
+        <h2 data-t="formTitle">Créer votre compte</h2>
+        <p class="sub" data-t="formSub">Gratuit, en une minute. Ordinateur et téléphone.</p>
         <form id="signup" novalidate>
           <div class="field">
-            <label for="email">Adresse e-mail</label>
+            <label for="email" data-t="email">Adresse e-mail</label>
             <input id="email" class="input" type="email" autocomplete="email" required />
           </div>
           <div class="field">
-            <label for="pwd">Mot de passe <small>8 caractères minimum</small></label>
+            <label for="pwd"><span data-t="pwd">Mot de passe</span> <small data-t="pwdHint">8 caractères minimum</small></label>
             <div class="pwd"><input id="pwd" class="input" type="password" autocomplete="new-password" minlength="8" required /><button type="button" data-toggle="pwd">Afficher</button></div>
           </div>
           <div class="field">
-            <label for="pwd2">Confirmer le mot de passe</label>
+            <label for="pwd2" data-t="pwd2">Confirmer le mot de passe</label>
             <div class="pwd"><input id="pwd2" class="input" type="password" autocomplete="new-password" required /><button type="button" data-toggle="pwd2">Afficher</button></div>
           </div>
           <div class="err" id="err" role="alert"></div>
-          <button class="btn btn-primary" id="submit" type="submit">Créer mon compte</button>
-          <p class="legal">Votre compte est actif immédiatement. Votre adresse sert uniquement à vous connecter et à recevoir vos alertes ; vous pouvez supprimer votre compte à tout moment depuis les paramètres.</p>
+          <button class="btn btn-primary" id="submit" type="submit" data-t="submit">Créer mon compte</button>
+          <p class="legal" data-t="legal">Votre compte est actif immédiatement. Votre adresse sert uniquement à vous connecter et à recevoir vos alertes ; vous pouvez supprimer votre compte à tout moment depuis les paramètres.</p>
         </form>
-        <div class="switch">Déjà inscrit ? <a href="/geomarket-live-app/connexion">Se connecter</a></div>
+        <div class="switch"><span data-t="have">Déjà inscrit ?</span> <a href="/geomarket-live-app/connexion" data-t="signin">Se connecter</a></div>
       </div>
 
       <div id="done-view" class="done" hidden>
         <div class="mark">✓</div>
-        <h2>Compte créé</h2>
-        <p>Bienvenue sur GeoMarket Live. Ouverture de l'application…</p>
+        <h2 data-t="doneTitle">Compte créé</h2>
+        <p data-t="doneText">Bienvenue sur GeoMarket Live. Ouverture de l'application…</p>
       </div>
     </aside>
   </main>
 
-  <footer>GeoMarket Live · Les informations publiées ne constituent pas un conseil en investissement.</footer>
+  <footer data-t="footer">GeoMarket Live · Les informations publiées ne constituent pas un conseil en investissement.</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     const KEY = 'sb_publishable_O3uSO4MQjOvWJ_Tngq-fXg_abXeGpVZ';
-    const sb = supabase.createClient('https://qleeggufkhdwadhuqnzg.supabase.co', KEY);
+    // Si la bibliothèque n'a pas pu se charger, la page reste lisible et affiche une erreur claire à l'envoi.
+    const sb = window.supabase ? window.supabase.createClient('https://qleeggufkhdwadhuqnzg.supabase.co', KEY) : null;
     const $ = (id) => document.getElementById(id);
     const APP = '/geomarket-live-app/';
 
+    // ---------- Langue : français ou anglais, partagée avec l'application (clé gml.lang) ----------
+    const T = {
+      fr: {
+        title: 'Rejoindre GeoMarket Live', signin: 'Se connecter', kicker: 'Veille géopolitique et marchés',
+        h1: 'Ce qui se passe dans le monde, et <em>ce que cela change</em> sur les marchés.',
+        lead: "GeoMarket Live rassemble l'actualité internationale et les marchés financiers dans un seul tableau de bord. Chaque événement est sourcé, recoupé et relié aux actifs qu'il peut faire bouger.",
+        f1t: 'Actualités vérifiées', f1: "Mises à jour toutes les heures, à partir de grands médias et d'institutions comme la BCE, la Fed ou l'ONU. Chaque événement indique s'il est rapporté ou corroboré.",
+        f2t: 'Les marchés qui comptent', f2: 'Pétrole, or, devises, taux souverains et grands indices, à partir de sources officielles.',
+        f3t: 'Alertes personnalisées', f3: 'Fixez vos seuils sur un actif, un thème ou une publication économique. GeoMarket Live vous prévient.',
+        f4t: 'Votre liste de suivi', f4: 'Gardez vos actifs sous les yeux, cherchez un titre par son code ISIN et consultez le calendrier économique.',
+        th1: 'Géopolitique', th2: 'Pétrole', th3: 'Inflation', th4: 'Banques centrales', th5: 'Obligations', th6: 'Actions', th7: 'Or et devises',
+        already: 'Vous êtes déjà connecté avec', openApp: "Ouvrir l'application", logout: 'Se déconnecter pour créer un autre compte',
+        formTitle: 'Créer votre compte', formSub: 'Gratuit, en une minute. Ordinateur et téléphone.',
+        email: 'Adresse e-mail', pwd: 'Mot de passe', pwdHint: '8 caractères minimum', pwd2: 'Confirmer le mot de passe',
+        submit: 'Créer mon compte', creating: 'Création du compte…', show: 'Afficher', hide: 'Masquer',
+        legal: 'Votre compte est actif immédiatement. Votre adresse sert uniquement à vous connecter et à recevoir vos alertes ; vous pouvez supprimer votre compte à tout moment depuis les paramètres.',
+        have: 'Déjà inscrit ?', doneTitle: 'Compte créé', doneText: "Bienvenue sur GeoMarket Live. Ouverture de l'application…",
+        footer: 'GeoMarket Live · Les informations publiées ne constituent pas un conseil en investissement.',
+        eEmail: 'Saisissez une adresse e-mail valide.', ePwd: 'Le mot de passe doit contenir au moins 8 caractères.', eMatch: 'Les deux mots de passe ne sont pas identiques.',
+        exists: 'Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez « mot de passe oublié » sur la page de connexion.',
+        badEmail: 'Adresse e-mail invalide.', badPwd: 'Mot de passe refusé : 8 caractères minimum.',
+        rate: "Trop d'inscriptions en ce moment. Réessayez dans quelques minutes.",
+        login: 'Compte créé, mais la connexion a échoué. Connectez-vous depuis la page de connexion.',
+        failed: "L'inscription n'a pas abouti. Vérifiez votre connexion et réessayez.",
+      },
+      en: {
+        title: 'Join GeoMarket Live', signin: 'Sign in', kicker: 'Geopolitics and markets watch',
+        h1: "What's happening in the world, and <em>what it changes</em> in the markets.",
+        lead: 'GeoMarket Live brings international news and financial markets together in a single dashboard. Every event is sourced, cross-checked and linked to the assets it can move.',
+        f1t: 'Verified news', f1: 'Updated every hour from major media and institutions such as the ECB, the Fed and the UN. Each event shows whether it is reported or corroborated.',
+        f2t: 'The markets that matter', f2: 'Oil, gold, currencies, sovereign yields and major indices, from official sources.',
+        f3t: 'Personal alerts', f3: 'Set your thresholds on an asset, a theme or an economic release. GeoMarket Live lets you know.',
+        f4t: 'Your watchlist', f4: 'Keep your assets in view, look up a security by its ISIN and check the economic calendar.',
+        th1: 'Geopolitics', th2: 'Oil', th3: 'Inflation', th4: 'Central banks', th5: 'Bonds', th6: 'Equities', th7: 'Gold and FX',
+        already: 'You are already signed in as', openApp: 'Open the app', logout: 'Sign out to create another account',
+        formTitle: 'Create your account', formSub: 'Free, in one minute. Computer and phone.',
+        email: 'Email address', pwd: 'Password', pwdHint: '8 characters minimum', pwd2: 'Confirm password',
+        submit: 'Create my account', creating: 'Creating your account…', show: 'Show', hide: 'Hide',
+        legal: 'Your account is active right away. Your address is only used to sign you in and send your alerts; you can delete your account at any time from the settings.',
+        have: 'Already registered?', doneTitle: 'Account created', doneText: 'Welcome to GeoMarket Live. Opening the app…',
+        footer: 'GeoMarket Live · Published information does not constitute investment advice.',
+        eEmail: 'Enter a valid email address.', ePwd: 'The password must be at least 8 characters long.', eMatch: 'The two passwords do not match.',
+        exists: 'An account already exists with this address. Sign in, or use "forgot password" on the sign-in page.',
+        badEmail: 'Invalid email address.', badPwd: 'Password rejected: 8 characters minimum.',
+        rate: 'Too many sign-ups right now. Please try again in a few minutes.',
+        login: 'Account created, but signing in failed. Please sign in from the sign-in page.',
+        failed: 'Sign-up did not go through. Check your connection and try again.',
+      },
+    };
+    const store = { get: () => { try { return localStorage.getItem('gml.lang'); } catch { return null; } }, set: (v) => { try { localStorage.setItem('gml.lang', v); } catch {} } };
+    const initial = () => {
+      const q = new URLSearchParams(location.search).get('lang');
+      if (q === 'fr' || q === 'en') return q;
+      const s = store.get();
+      if (s === 'fr' || s === 'en') return s;
+      return (navigator.languages || [navigator.language]).some((l) => (l || '').toLowerCase().startsWith('fr')) ? 'fr' : 'en';
+    };
+    let lang = 'fr';
+    const t = (k) => T[lang][k];
+    function setLang(l, remember) {
+      lang = l;
+      if (remember) store.set(l);
+      document.documentElement.lang = l;
+      document.title = t('title');
+      document.querySelectorAll('[data-t]').forEach((el) => { const v = t(el.dataset.t); if (el.hasAttribute('data-html')) el.innerHTML = v; else el.textContent = v; });
+      document.querySelectorAll('[data-toggle]').forEach((b) => { b.textContent = $(b.dataset.toggle).type === 'password' ? t('show') : t('hide'); });
+      document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
+      $('err').textContent = '';
+    }
+    document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang, true)));
+    setLang(initial(), false);
+
     // Déjà connecté sur cet appareil : on le signale, sans quitter la page, pour que le formulaire reste accessible.
-    sb.auth.getSession().then(({ data }) => {
+    sb?.auth.getSession().then(({ data }) => {
       if (!data.session) return;
       $('already-email').textContent = data.session.user.email;
       $('already').hidden = false;
     });
-    $('logout').addEventListener('click', async () => { await sb.auth.signOut(); $('already').hidden = true; $('email').focus(); });
+    $('logout').addEventListener('click', async () => { await sb?.auth.signOut(); $('already').hidden = true; $('email').focus(); });
 
     document.querySelectorAll('[data-toggle]').forEach((b) => b.addEventListener('click', () => {
       const i = $(b.dataset.toggle); const show = i.type === 'password';
-      i.type = show ? 'text' : 'password'; b.textContent = show ? 'Masquer' : 'Afficher';
+      i.type = show ? 'text' : 'password'; b.textContent = show ? t('hide') : t('show');
     }));
-
 
     $('signup').addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const email = $('email').value.trim().toLowerCase(), pwd = $('pwd').value, pwd2 = $('pwd2').value;
       const err = $('err'); err.textContent = '';
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err.textContent = 'Saisissez une adresse e-mail valide.'; $('email').focus(); return; }
-      if (pwd.length < 8) { err.textContent = 'Le mot de passe doit contenir au moins 8 caractères.'; $('pwd').focus(); return; }
-      if (pwd !== pwd2) { err.textContent = 'Les deux mots de passe ne sont pas identiques.'; $('pwd2').focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err.textContent = t('eEmail'); $('email').focus(); return; }
+      if (pwd.length < 8) { err.textContent = t('ePwd'); $('pwd').focus(); return; }
+      if (pwd !== pwd2) { err.textContent = t('eMatch'); $('pwd2').focus(); return; }
 
-      const btn = $('submit'); btn.disabled = true; btn.textContent = 'Création du compte…';
+      const btn = $('submit'); btn.disabled = true; btn.textContent = t('creating');
       try {
+        if (!sb) throw { code: 'failed' };
         // 1. Création du compte, actif immédiatement.
         const res = await fetch('https://qleeggufkhdwadhuqnzg.supabase.co/functions/v1/signup', {
           method: 'POST',
@@ -182,21 +265,16 @@
         });
         const out = await res.json().catch(() => ({}));
         if (!res.ok) throw { code: out.error };
-        // 2. Connexion avec le mot de passe choisi, puis entrée dans l'application.
+        // 2. Connexion avec le mot de passe choisi, puis entrée dans l'application, dans la langue choisie.
         const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
         if (error) throw { code: 'login' };
+        store.set(lang);
         $('form-view').hidden = true; $('done-view').hidden = false;
         location.replace(APP + 'bienvenue');
       } catch (e) {
-        err.textContent = ({
-          exists: 'Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez « mot de passe oublié » sur la page de connexion.',
-          email: 'Adresse e-mail invalide.',
-          password: 'Mot de passe refusé : 8 caractères minimum.',
-          rate: 'Trop d\'inscriptions en ce moment. Réessayez dans quelques minutes.',
-          login: 'Compte créé, mais la connexion a échoué. Connectez-vous depuis la page de connexion.',
-        })[e?.code] ?? 'L\'inscription n\'a pas abouti. Vérifiez votre connexion et réessayez.';
+        err.textContent = t({ exists: 'exists', email: 'badEmail', password: 'badPwd', rate: 'rate', login: 'login' }[e?.code] || 'failed');
       } finally {
-        btn.disabled = false; btn.textContent = 'Créer mon compte';
+        btn.disabled = false; btn.textContent = t('submit');
       }
     });
   </script>
