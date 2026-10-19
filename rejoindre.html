@@ -62,6 +62,10 @@
     .legal { font-size: 12px; color: var(--faint); line-height: 1.5; margin: 4px 0 0; }
     .switch { text-align: center; font-size: 14px; color: var(--muted); margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--rule); }
     .switch a { color: var(--gold-light); text-decoration: none; }
+    .already { border: 1px solid var(--rule-strong); border-radius: 4px; padding: 12px 14px; margin-bottom: 18px; font-size: 13px; color: var(--ivory-soft); }
+    .already p { margin: 0 0 10px; }
+    .already-actions { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+    .btn-sm { padding: 7px 12px; font-size: 13px; }
     .done { text-align: center; padding: 12px 0; }
     .done .mark { font-size: 34px; color: var(--up); }
     .done h2 { margin-top: 8px; }
@@ -103,6 +107,10 @@
 
     <aside class="panel" id="panel">
       <div id="form-view">
+        <div id="already" class="already" hidden>
+          <p>Vous êtes déjà connecté avec <b id="already-email"></b>.</p>
+          <div class="already-actions"><a class="btn btn-sm" href="/geomarket-live-app/">Ouvrir l'application</a><button type="button" class="link-btn" id="logout">Se déconnecter pour créer un autre compte</button></div>
+        </div>
         <h2>Créer votre compte</h2>
         <p class="sub">Gratuit, en une minute. Ordinateur et téléphone.</p>
         <form id="signup" novalidate>
@@ -142,8 +150,13 @@
     const $ = (id) => document.getElementById(id);
     const APP = '/geomarket-live-app/';
 
-    // Déjà connecté : direction l'application.
-    sb.auth.getSession().then(({ data }) => { if (data.session) location.replace(APP); });
+    // Déjà connecté sur cet appareil : on le signale, sans quitter la page, pour que le formulaire reste accessible.
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) return;
+      $('already-email').textContent = data.session.user.email;
+      $('already').hidden = false;
+    });
+    $('logout').addEventListener('click', async () => { await sb.auth.signOut(); $('already').hidden = true; $('email').focus(); });
 
     document.querySelectorAll('[data-toggle]').forEach((b) => b.addEventListener('click', () => {
       const i = $(b.dataset.toggle); const show = i.type === 'password';
