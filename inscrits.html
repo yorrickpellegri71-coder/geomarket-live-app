@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0A1322" />
+  <link rel="icon" type="image/svg+xml" href="/geomarket-live-app/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/geomarket-live-app/assets/index-DLsVRltp.css" />
+  <title>Inscrits · GeoMarket Live</title>
+  <style>
+    body { background: var(--night); color: var(--ivory); font-family: var(--sans); margin: 0; }
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 32px; border-bottom: 1px solid var(--rule); }
+    .brand { font: 600 18px var(--serif); letter-spacing: .08em; color: var(--ivory); text-decoration: none; }
+    .brand small { font: 500 11px var(--sans); color: var(--gold); letter-spacing: .12em; margin-left: 6px; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .stat b { display: block; font: 500 26px var(--mono); margin-top: 6px; }
+    .tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+    .tools .field { flex: 1 1 220px; }
+    .tools select.input { width: auto; min-width: 200px; }
+    .who b { display: block; font-weight: 600; }
+    .who a { color: var(--gold-light); text-decoration: none; font-size: 12px; word-break: break-all; }
+    .who a:hover { color: var(--ivory); }
+    .stars { display: inline-flex; gap: 2px; }
+    .stars button { background: none; border: 0; padding: 2px; cursor: pointer; font-size: 18px; line-height: 1; color: var(--rule-strong); }
+    .stars button.on { color: var(--gold); }
+    .stars button:hover { color: var(--gold-light); }
+    .meter { width: 90px; height: 6px; background: var(--night-3); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+    .meter i { display: block; height: 100%; background: var(--gold); }
+    textarea.note { width: 100%; min-width: 180px; min-height: 38px; resize: vertical; background: var(--night); border: 1px solid var(--rule); border-radius: 4px; color: var(--ivory); font: 13px var(--sans); padding: 6px 8px; }
+    textarea.note:focus { border-color: var(--gold); outline: none; }
+    .ok { color: var(--up); } .ko { color: var(--down); }
+    .saved { font-size: 11px; color: var(--up); min-height: 14px; }
+    .empty { padding: 32px; text-align: center; }
+    @media (max-width: 760px) {
+      .top { padding: 12px 16px; }
+      .page { padding: 20px 16px 48px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/geomarket-live-app/">GEOMARKET<small>LIVE</small></a>
+    <a class="link-btn" href="/geomarket-live-app/admin">← Administration</a>
+  </header>
+
+  <main class="page">
+    <div class="stack">
+      <h1 class="h1">Inscrits et contacts</h1>
+      <p class="muted">Toutes les personnes qui ont créé un compte, avec leur activité et votre note. Le lien d'inscription à partager : <a class="link-btn" id="signup-link" href="/geomarket-live-app/inscription"></a></p>
+    </div>
+
+    <div id="msg" class="card muted" hidden></div>
+
+    <section id="content" class="stack-lg" hidden>
+      <div class="stats">
+        <div class="card stat"><span class="xs muted">Inscrits</span><b id="s-total">–</b></div>
+        <div class="card stat"><span class="xs muted">Actifs sur 7 jours</span><b id="s-active">–</b></div>
+        <div class="card stat"><span class="xs muted">Nouveaux sur 30 jours</span><b id="s-new">–</b></div>
+        <div class="card stat"><span class="xs muted">Note moyenne</span><b id="s-rating">–</b></div>
+      </div>
+
+      <div class="tools">
+        <div class="field"><label for="q">Rechercher</label><input id="q" class="input" placeholder="Nom ou adresse e-mail" /></div>
+        <div class="field" style="flex:0 0 auto"><label for="sort">Classer par</label>
+          <select id="sort" class="input">
+            <option value="created">Date d'inscription</option>
+            <option value="activity">Indice d'activité</option>
+            <option value="rating">Note</option>
+            <option value="last">Dernière connexion</option>
+          </select>
+        </div>
+        <button id="csv" class="btn btn-sm" type="button">Exporter (CSV)</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr>
+            <th>Contact</th><th>Inscrit le</th><th>Dernière connexion</th><th>E-mail confirmé</th>
+            <th>Activité</th><th class="num">Suivi</th><th class="num">Alertes</th><th>Note</th><th>Commentaire</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="xs muted">Indice d'activité sur 100 : connexion récente (jusqu'à 40), actifs suivis (jusqu'à 20), alertes créées (jusqu'à 25), accueil terminé (15). La note et le commentaire ne sont visibles que par les administrateurs.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const sb = supabase.createClient('https://qleeggufkhdwadhuqnzg.supabase.co', 'sb_publishable_O3uSO4MQjOvWJ_Tngq-fXg_abXeGpVZ');
+    const $ = (id) => document.getElementById(id);
+    const tz = 'Europe/Luxembourg';
+    const fmt = (d) => d ? new Date(d).toLocaleString('fr-FR', { timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let all = [];
+
+    const signup = new URL('/geomarket-live-app/inscription', location.origin).href;
+    $('signup-link').textContent = signup;
+
+    function show(msg, html) { $('msg').hidden = false; $('msg').innerHTML = html ?? esc(msg); $('content').hidden = true; }
+
+    function stats() {
+      const now = Date.now();
+      $('s-total').textContent = all.length;
+      $('s-active').textContent = all.filter((c) => c.last_sign_in_at && now - Date.parse(c.last_sign_in_at) < 7 * 864e5).length;
+      $('s-new').textContent = all.filter((c) => now - Date.parse(c.created_at) < 30 * 864e5).length;
+      const rated = all.filter((c) => c.rating);
+      $('s-rating').textContent = rated.length ? (rated.reduce((s, c) => s + c.rating, 0) / rated.length).toFixed(1) + ' / 5' : '–';
+    }
+
+    function render() {
+      const q = $('q').value.trim().toLowerCase();
+      const key = $('sort').value;
+      const val = (c) => key === 'activity' ? c.activity_score : key === 'rating' ? (c.rating ?? 0) : key === 'last' ? Date.parse(c.last_sign_in_at ?? 0) : Date.parse(c.created_at);
+      const list = all.filter((c) => !q || `${c.display_name ?? ''} ${c.email}`.toLowerCase().includes(q)).sort((a, b) => val(b) - val(a));
+      $('rows').innerHTML = list.length ? list.map((c) => `
+        <tr data-id="${c.id}">
+          <td class="who"><b>${esc(c.display_name || '—')}${c.role === 'admin' ? ' <span class="badge" style="color:var(--gold)">Admin</span>' : ''}</b><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></td>
+          <td>${fmt(c.created_at)}</td>
+          <td>${fmt(c.last_sign_in_at)}</td>
+          <td>${c.email_confirmed ? '<span class="ok">Oui</span>' : '<span class="ko">Non</span>'}</td>
+          <td><span style="font-family:var(--mono)">${c.activity_score}</span><div class="meter"><i style="width:${c.activity_score}%"></i></div></td>
+          <td class="num">${c.watchlist_count}</td>
+          <td class="num">${c.alerts_count}</td>
+          <td><span class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-star="${n}" class="${(c.rating ?? 0) >= n ? 'on' : ''}" aria-label="${n} étoile${n > 1 ? 's' : ''}">★</button>`).join('')}</span></td>
+          <td><textarea class="note" maxlength="1000" placeholder="Ajouter un commentaire">${esc(c.note)}</textarea><div class="saved"></div></td>
+        </tr>`).join('') : '<tr><td colspan="9" class="empty muted">Aucun inscrit ne correspond.</td></tr>';
+    }
+
+    async function save(tr, patch) {
+      const c = all.find((x) => x.id === tr.dataset.id);
+      Object.assign(c, patch);
+      const { error } = await sb.rpc('admin_set_contact_rating', { p_user: c.id, p_rating: c.rating ?? null, p_note: c.note ?? '' });
+      const s = tr.querySelector('.saved');
+      s.textContent = error ? 'Échec de l\'enregistrement' : 'Enregistré';
+      s.className = 'saved ' + (error ? 'ko' : 'ok');
+      setTimeout(() => { s.textContent = ''; }, 2500);
+      stats();
+    }
+
+    $('rows').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-star]'); if (!b) return;
+      const tr = b.closest('tr'); const c = all.find((x) => x.id === tr.dataset.id);
+      const n = Number(b.dataset.star);
+      const rating = c.rating === n ? null : n; // un second clic sur la même étoile retire la note
+      tr.querySelectorAll('[data-star]').forEach((x) => x.classList.toggle('on', rating && Number(x.dataset.star) <= rating));
+      save(tr, { rating });
+    });
+    $('rows').addEventListener('change', (e) => {
+      if (e.target.matches('textarea.note')) save(e.target.closest('tr'), { note: e.target.value });
+    });
+    $('q').addEventListener('input', render);
+    $('sort').addEventListener('change', render);
+
+    $('csv').addEventListener('click', () => {
+      const cols = ['display_name', 'email', 'created_at', 'last_sign_in_at', 'email_confirmed', 'activity_score', 'watchlist_count', 'alerts_count', 'rating', 'note'];
+      const head = ['Nom', 'E-mail', 'Inscrit le', 'Dernière connexion', 'E-mail confirmé', 'Activité', 'Suivi', 'Alertes', 'Note', 'Commentaire'];
+      const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const csv = '﻿' + [head, ...all.map((c) => cols.map((k) => c[k]))].map((r) => r.map(cell).join(';')).join('\r\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      a.download = `inscrits-geomarket-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    });
+
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return show('', 'Connectez-vous avec un compte administrateur pour voir les inscrits. <a class="link-btn" href="/geomarket-live-app/connexion">Se connecter</a>');
+      const { data, error } = await sb.rpc('admin_contacts');
+      if (error) return show(error.code === '42501' ? 'Cette page est réservée aux administrateurs.' : 'Impossible de charger les inscrits : ' + error.message);
+      all = data ?? [];
+      $('content').hidden = false;
+      stats();
+      render();
+    })();
+  </script>
+</body>
+</html>
