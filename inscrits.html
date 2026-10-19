@@ -50,7 +50,7 @@
   <main class="page">
     <div class="stack">
       <h1 class="h1">Inscrits et contacts</h1>
-      <p class="muted">Toutes les personnes qui ont créé un compte, avec leur activité et votre note. Le lien d'inscription à partager : <a class="link-btn" id="signup-link" href="/geomarket-live-app/inscription"></a></p>
+      <p class="muted">Toutes les personnes qui ont créé un compte, avec leur activité et votre note. Le lien d'inscription à partager : <a class="link-btn" id="signup-link" href="/geomarket-live-app/rejoindre.html"></a></p>
     </div>
 
     <div id="msg" class="card muted" hidden></div>
@@ -98,7 +98,7 @@
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     let all = [];
 
-    const signup = new URL('/geomarket-live-app/inscription', location.origin).href;
+    const signup = new URL('/geomarket-live-app/rejoindre.html', location.origin).href;
     $('signup-link').textContent = signup;
 
     function show(msg, html) { $('msg').hidden = false; $('msg').innerHTML = html ?? esc(msg); $('content').hidden = true; }
