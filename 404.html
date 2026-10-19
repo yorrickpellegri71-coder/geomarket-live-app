@@ -9,6 +9,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <title>GeoMarket Live</title>
+    <script>
+      // Visiteur sans compte : il passe d'abord par la page de présentation et d'inscription.
+      (function () {
+        try {
+          var p = location.pathname.replace(/^\/geomarket-live-app/, '');
+          var open = /^\/(connexion|mot-de-passe-oublie|nouveau-mot-de-passe)\/?$/.test(p);
+          var authReturn = /access_token|refresh_token|type=recovery|error_description/.test(location.hash) || /[?&](code|token_hash)=/.test(location.search);
+          var signedIn = !!localStorage.getItem('sb-qleeggufkhdwadhuqnzg-auth-token');
+          if (/^\/inscription\/?$/.test(p) || (!signedIn && !open && !authReturn)) location.replace('/geomarket-live-app/rejoindre.html');
+        } catch (e) {}
+      })();
+    </script>
     <script type="module" crossorigin src="/geomarket-live-app/assets/index-iZJ0IRVS.js"></script>
     <link rel="modulepreload" crossorigin href="/geomarket-live-app/assets/rolldown-runtime-CbXtAM7H.js">
     <link rel="modulepreload" crossorigin href="/geomarket-live-app/assets/vendor-DKINCJCV.js">
