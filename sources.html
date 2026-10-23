@@ -54,7 +54,7 @@ const T = {
       ['Recherche par code ISIN', 'Service OpenFIGI (Bloomberg), interrogé à la demande.'],
       ['Traduction des actualités', 'Traduction automatique des titres dans la langue choisie ; le lien renvoie toujours au texte original.'],
     ],
-    soon: 'En préparation : institutions supranationales (UE, ONU, OMC) et banques multilatérales (FMI, Banque mondiale, BERD, BRI, BAD).',
+    soon: 'Le FMI, la BERD et la Banque asiatique de développement bloquent les accès automatisés à leurs flux : leurs annonces arrivent par la presse et ONU Info. La profondeur de marché (carnet d’ordres) exige un flux payant et n’est pas proposée.',
   },
   en: {
     title: 'Data sources', print: '⎙ Print', back: '← Back to the app',
@@ -70,7 +70,7 @@ const T = {
       ['ISIN lookup', 'OpenFIGI service (Bloomberg), queried on demand.'],
       ['News translation', 'Headlines machine-translated into the chosen language; the link always points to the original text.'],
     ],
-    soon: 'Coming next: supranational bodies (EU, UN, WTO) and multilateral banks (IMF, World Bank, EBRD, BIS, ADB).',
+    soon: 'The IMF, EBRD and Asian Development Bank block automated access to their feeds: their announcements come through the press and UN News. Depth of market (order book) requires a paid feed and is not offered.',
   },
 };
 const NEWS = [
@@ -83,16 +83,19 @@ const NEWS = [
   ['ONU Info', 'official', { fr: 'Toutes les actualités de l’ONU', en: 'All UN news' }],
   ['BCE', 'release', { fr: 'Communiqués de presse', en: 'Press releases' }],
   ['Réserve fédérale (Fed)', 'release', { fr: 'Communiqués de presse', en: 'Press releases' }],
+  ['OMC', 'official', { fr: 'Actualités de l’Organisation mondiale du commerce', en: 'World Trade Organization news' }],
+  ['BRI', 'release', { fr: 'Communiqués de la Banque des règlements internationaux', en: 'Bank for International Settlements press releases' }],
+  ['Parlement européen', 'official', { fr: 'Communiqués de presse', en: 'Press releases' }],
+  ['Conseil de l’UE', 'release', { fr: 'Communiqués de presse', en: 'Press releases' }],
+  ['Banque mondiale', 'official', { fr: 'Actualités et publications', en: 'News and publications' }],
 ];
 const MKT = [
   ['ICE Futures', 'market', { fr: 'Brent, contrats à terme', en: 'Brent futures' }, 'delayed'],
   ['NYMEX', 'market', { fr: 'WTI, contrats à terme', en: 'WTI futures' }, 'delayed'],
   ['EIA', 'official', { fr: 'Stocks pétroliers américains', en: 'US crude inventories' }, 'weekly'],
-  ['LBMA', 'market', { fr: 'Or au comptant', en: 'Spot gold' }, 'daily'],
+  ['COMEX (via Yahoo Finance)', 'market', { fr: 'Or, contrat à terme le plus proche ; conversion EUR et GBP', en: 'Gold, front-month future; EUR and GBP conversion' }, 'delayed'],
   ['BCE — taux de référence', 'official', { fr: 'EUR/USD, EUR/CHF, EUR/GBP', en: 'EUR/USD, EUR/CHF, EUR/GBP' }, 'eod'],
-  ['S&P Dow Jones Indices', 'market', { fr: 'S&P 500, Dow Jones', en: 'S&P 500, Dow Jones' }, 'delayed'],
-  ['Nasdaq', 'market', { fr: 'Nasdaq Composite', en: 'Nasdaq Composite' }, 'delayed'],
-  ['STOXX', 'market', { fr: 'STOXX Europe 600', en: 'STOXX Europe 600' }, 'eod'],
+  ['Yahoo Finance', 'market', { fr: 'S&P 500, Nasdaq, Dow Jones, STOXX 600 ; détails de séance (ouverture, haut, bas, volume, 52 semaines), historiques longs, devises au comptant, valeurs PE/VC', en: 'S&P 500, Nasdaq, Dow Jones, STOXX 600; session details (open, high, low, volume, 52 weeks), long histories, spot FX, PE/VC stocks' }, 'delayed'],
   ['Cboe', 'market', { fr: 'Indice de volatilité VIX', en: 'VIX volatility index' }, 'eod'],
   ['Deutsche Börse (Eurex)', 'market', { fr: 'Euro-Bund Future', en: 'Euro-Bund future' }, 'delayed'],
   ['Trésor américain', 'official', { fr: 'Taux US 2 et 10 ans', en: 'US 2y and 10y yields' }, 'eod'],
