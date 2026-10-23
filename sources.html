@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0A1322" />
+  <link rel="icon" type="image/svg+xml" href="/geomarket-live-app/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/geomarket-live-app/assets/index-DLsVRltp.css" />
+  <title>Sources des données · GeoMarket Live</title>
+  <style>
+    body { background: var(--night); color: var(--ivory); font-family: var(--sans); margin: 0; }
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 32px; border-bottom: 1px solid var(--rule); }
+    .brand { font: 600 18px var(--serif); letter-spacing: .08em; color: var(--ivory); text-decoration: none; }
+    .brand small { font: 500 11px var(--sans); color: var(--gold); letter-spacing: .12em; margin-left: 6px; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 32px 64px; display: flex; flex-direction: column; gap: 32px; }
+    .lead { color: var(--muted); max-width: 760px; line-height: 1.6; }
+    .pill { display: inline-block; padding: 2px 8px; border: 1px solid var(--rule-strong); border-radius: 3px; font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .pill.off { border-color: var(--up); color: var(--up); }
+    .pill.mkt { border-color: var(--gold); color: var(--gold-light); }
+    .langs button { background: none; border: 1px solid var(--rule-strong); color: var(--muted); border-radius: 3px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+    .langs button[aria-pressed=true] { color: var(--ivory); border-color: var(--gold); }
+    .note { border-left: 2px solid var(--gold); padding: 4px 0 4px 14px; color: var(--ivory-soft); font-size: 14px; line-height: 1.6; }
+    @media (max-width: 700px) { .top, .wrap { padding-left: 16px; padding-right: 16px; } .hide-sm { display: none; } }
+    @media print { .top .langs, .no-print { display: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/geomarket-live-app/">GEOMARKET <small>LIVE</small></a>
+    <div class="row" style="gap:8px">
+      <div class="langs" role="group" aria-label="Langue / Language">
+        <button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button>
+      </div>
+      <button type="button" class="btn btn-sm no-print" onclick="window.print()" data-t="print"></button>
+    </div>
+  </header>
+  <main class="wrap" id="app"></main>
+<script>
+const T = {
+  fr: {
+    title: 'Sources des données', print: '⎙ Imprimer', back: '← Retour à l’application',
+    lead: 'D’où vient chaque information affichée dans GeoMarket Live. Rien n’est inventé : les cours viennent des publications officielles ou des places de marché, les actualités des flux publics des médias et des institutions, avec le lien vers l’article d’origine.',
+    newsH: 'Actualités', newsNote: 'Collecte automatique toutes les heures. Les titres qui parlent du même sujet dans une fenêtre de 36 h sont regroupés en un seul événement. Un événement passe « corroboré » dès que deux médias distincts le rapportent, ou qu’une source officielle le publie.',
+    mktH: 'Marchés et taux', mktNote: 'Les cours marqués « différé » sont publiés avec le délai contractuel de la place de marché (15 min). Les taux souverains et les taux de change de référence sont des valeurs officielles de fin de journée.',
+    cols: ['Source', 'Type', 'Couverture', 'Rythme'], ncols: ['Source', 'Type', 'Rubrique', 'Rythme'],
+    types: { press: 'Presse', official: 'Officiel', release: 'Communiqué', market: 'Marché' },
+    hourly: 'Toutes les heures', daily: 'Quotidien', weekly: 'Hebdomadaire', delayed: 'Différé 15 min', eod: 'Clôture du jour',
+    otherH: 'Autres données', other: [
+      ['Calendrier économique et publications (inflation, emploi)', 'Instituts statistiques officiels : BLS, Eurostat, Insee — réalisé, consensus et précédent affichés séparément.'],
+      ['Banques centrales', 'Communiqués et calendriers officiels : Réserve fédérale, BCE, Banque d’Angleterre, Banque du Japon.'],
+      ['Recherche par code ISIN', 'Service OpenFIGI (Bloomberg), interrogé à la demande.'],
+      ['Traduction des actualités', 'Traduction automatique des titres dans la langue choisie ; le lien renvoie toujours au texte original.'],
+    ],
+    soon: 'En préparation : institutions supranationales (UE, ONU, OMC) et banques multilatérales (FMI, Banque mondiale, BERD, BRI, BAD).',
+  },
+  en: {
+    title: 'Data sources', print: '⎙ Print', back: '← Back to the app',
+    lead: 'Where every piece of information shown in GeoMarket Live comes from. Nothing is made up: prices come from official publications or exchanges, news from the public feeds of media outlets and institutions, always with a link to the original article.',
+    newsH: 'News', newsNote: 'Collected automatically every hour. Headlines covering the same story within a 36-hour window are grouped into a single event. An event becomes “corroborated” once two separate outlets report it, or an official source publishes it.',
+    mktH: 'Markets and rates', mktNote: 'Prices marked “delayed” are published with the exchange’s contractual delay (15 min). Sovereign yields and reference exchange rates are official end-of-day values.',
+    cols: ['Source', 'Type', 'Coverage', 'Frequency'], ncols: ['Source', 'Type', 'Section', 'Frequency'],
+    types: { press: 'Press', official: 'Official', release: 'Press release', market: 'Exchange' },
+    hourly: 'Hourly', daily: 'Daily', weekly: 'Weekly', delayed: '15-min delay', eod: 'End of day',
+    otherH: 'Other data', other: [
+      ['Economic calendar and releases (inflation, jobs)', 'Official statistics offices: BLS, Eurostat, Insee — actual, consensus and previous shown separately.'],
+      ['Central banks', 'Official statements and meeting calendars: Federal Reserve, ECB, Bank of England, Bank of Japan.'],
+      ['ISIN lookup', 'OpenFIGI service (Bloomberg), queried on demand.'],
+      ['News translation', 'Headlines machine-translated into the chosen language; the link always points to the original text.'],
+    ],
+    soon: 'Coming next: supranational bodies (EU, UN, WTO) and multilateral banks (IMF, World Bank, EBRD, BIS, ADB).',
+  },
+};
+const NEWS = [
+  ['Les Echos', 'press', { fr: 'Finance et marchés', en: 'Finance & markets' }],
+  ['Le Monde', 'press', { fr: 'Économie, International', en: 'Economy, International' }],
+  ['France 24', 'press', { fr: 'Éco-tech, fil général', en: 'Business, general wire' }],
+  ['RFI', 'press', { fr: 'Économie, fil général', en: 'Economy, general wire' }],
+  ['franceinfo', 'press', { fr: 'Économie', en: 'Economy' }],
+  ['La Tribune', 'press', { fr: 'Fil général', en: 'General wire' }],
+  ['ONU Info', 'official', { fr: 'Toutes les actualités de l’ONU', en: 'All UN news' }],
+  ['BCE', 'release', { fr: 'Communiqués de presse', en: 'Press releases' }],
+  ['Réserve fédérale (Fed)', 'release', { fr: 'Communiqués de presse', en: 'Press releases' }],
+];
+const MKT = [
+  ['ICE Futures', 'market', { fr: 'Brent, contrats à terme', en: 'Brent futures' }, 'delayed'],
+  ['NYMEX', 'market', { fr: 'WTI, contrats à terme', en: 'WTI futures' }, 'delayed'],
+  ['EIA', 'official', { fr: 'Stocks pétroliers américains', en: 'US crude inventories' }, 'weekly'],
+  ['LBMA', 'market', { fr: 'Or au comptant', en: 'Spot gold' }, 'daily'],
+  ['BCE — taux de référence', 'official', { fr: 'EUR/USD, EUR/CHF, EUR/GBP', en: 'EUR/USD, EUR/CHF, EUR/GBP' }, 'eod'],
+  ['S&P Dow Jones Indices', 'market', { fr: 'S&P 500, Dow Jones', en: 'S&P 500, Dow Jones' }, 'delayed'],
+  ['Nasdaq', 'market', { fr: 'Nasdaq Composite', en: 'Nasdaq Composite' }, 'delayed'],
+  ['STOXX', 'market', { fr: 'STOXX Europe 600', en: 'STOXX Europe 600' }, 'eod'],
+  ['Cboe', 'market', { fr: 'Indice de volatilité VIX', en: 'VIX volatility index' }, 'eod'],
+  ['Deutsche Börse (Eurex)', 'market', { fr: 'Euro-Bund Future', en: 'Euro-Bund future' }, 'delayed'],
+  ['Trésor américain', 'official', { fr: 'Taux US 2 et 10 ans', en: 'US 2y and 10y yields' }, 'eod'],
+  ['Bundesbank', 'official', { fr: 'Bund 10 ans', en: 'German 10y Bund' }, 'eod'],
+  ['Banque d’Angleterre / UK DMO', 'official', { fr: 'Gilts 10 et 30 ans', en: '10y and 30y Gilts' }, 'eod'],
+  ['Ministère des Finances japonais', 'official', { fr: 'JGB 10 ans', en: '10y JGB' }, 'eod'],
+  ['MEF Italie', 'official', { fr: 'BTP 10 ans', en: '10y BTP' }, 'eod'],
+  ['Tesouro Nacional, MECON, BCCh, MinHacienda, BCRP', 'official', { fr: 'Taux 10 ans Brésil, Argentine, Chili, Colombie, Pérou', en: '10y yields Brazil, Argentina, Chile, Colombia, Peru' }, 'eod'],
+];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cls = (t) => (t === 'market' ? 'mkt' : t === 'press' ? '' : 'off');
+function render(l) {
+  const t = T[l];
+  document.documentElement.lang = l;
+  document.title = `${t.title} · GeoMarket Live`;
+  document.querySelectorAll('[data-t]').forEach((e) => (e.textContent = t[e.dataset.t]));
+  document.querySelectorAll('[data-l]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.l === l));
+  const table = (cols, rows) => `<div class="table-wrap"><table class="table"><thead><tr>${cols.map((c, i) => `<th${i === 2 ? ' class="hide-sm"' : ''}>${c}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+  document.getElementById('app').innerHTML = `
+    <section class="stack"><a class="small no-print" href="/geomarket-live-app/">${t.back}</a><h1 class="h1">${t.title}</h1><p class="lead">${t.lead}</p></section>
+    <section class="stack"><div class="section-head"><h2 class="h2">${t.newsH}</h2><span class="xs muted">${NEWS.length} ${l === 'fr' ? 'flux' : 'feeds'}</span></div>
+      <p class="note">${t.newsNote}</p>
+      ${table(t.ncols, NEWS.map(([n, ty, c]) => `<tr><td>${esc(n)}</td><td><span class="pill ${cls(ty)}">${t.types[ty]}</span></td><td class="hide-sm">${esc(c[l])}</td><td>${t.hourly}</td></tr>`))}
+      <p class="small muted">${t.soon}</p></section>
+    <section class="stack"><div class="section-head"><h2 class="h2">${t.mktH}</h2><span class="xs muted">${MKT.length}</span></div>
+      <p class="note">${t.mktNote}</p>
+      ${table(t.cols, MKT.map(([n, ty, c, f]) => `<tr><td>${esc(n)}</td><td><span class="pill ${cls(ty)}">${t.types[ty]}</span></td><td class="hide-sm">${esc(c[l])}</td><td>${t[f]}</td></tr>`))}</section>
+    <section class="stack"><div class="section-head"><h2 class="h2">${t.otherH}</h2></div>
+      <div class="kv" style="grid-template-columns:minmax(0,1fr) minmax(0,2fr);font-size:14px">${t.other.map(([a, b]) => `<b style="font-weight:500">${a}</b><span class="muted">${b}</span>`).join('')}</div></section>`;
+}
+let lang = 'fr';
+try { lang = new URLSearchParams(location.search).get('lang') || (navigator.language || 'fr').slice(0, 2); } catch (e) {}
+if (!T[lang]) lang = 'en';
+document.querySelectorAll('[data-l]').forEach((b) => b.addEventListener('click', () => render(b.dataset.l)));
+render(lang);
+</script>
+</body>
+</html>
