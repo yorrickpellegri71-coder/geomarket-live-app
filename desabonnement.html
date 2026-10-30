@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0A1322" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="/geomarket-live-app/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/geomarket-live-app/assets/site.css" />
+  <title>GeoMarket Live</title>
+  <style>
+    body { background: var(--night, #0A1322); color: var(--ivory, #F3EEE3); font-family: var(--sans, sans-serif); margin: 0; }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 64px 16px; }
+    .brand { font: 600 18px var(--serif, serif); letter-spacing: .08em; color: inherit; text-decoration: none; }
+    .brand small { font: 500 11px var(--sans, sans-serif); color: var(--gold, #C9A24A); letter-spacing: .12em; margin-left: 6px; }
+    h1 { font: 600 28px var(--serif, serif); margin: 40px 0 12px; }
+    p { color: var(--mist, #B9C0CC); line-height: 1.6; }
+    .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .links a { display: inline-block; padding: 10px 18px; border-radius: 4px; border: 1px solid #C9A24A; color: #F3EEE3; text-decoration: none; font: 500 14px var(--sans, sans-serif); }
+    .links a.primary { background: #C9A24A; color: #0A1322; }
+  </style>
+</head>
+<body>
+  <!-- Confirmation du lien « Ne plus recevoir ce résumé » des e-mails (supabase/functions/daily-digest). -->
+  <main class="wrap">
+    <a class="brand" href="/geomarket-live-app/">GEOMARKET<small>LIVE</small></a>
+    <h1 id="t"></h1>
+    <p id="p"></p>
+    <div class="links">
+      <a class="primary" id="app" href="/geomarket-live-app/"></a>
+      <a id="set" href="/geomarket-live-app/parametres"></a>
+    </div>
+  </main>
+  <script>
+    const T = {
+      fr: ['Désabonnement confirmé', 'Vous ne recevrez plus le résumé quotidien par e-mail. Vous pouvez le réactiver à tout moment dans vos paramètres.', 'Lien invalide', 'Ce lien de désabonnement n’est pas reconnu. Vous pouvez désactiver le résumé dans vos paramètres.', 'Ouvrir GeoMarket Live', 'Mes paramètres'],
+      en: ['Unsubscribed', 'You will no longer receive the daily email briefing. You can turn it back on at any time in your settings.', 'Invalid link', 'This unsubscribe link is not recognised. You can turn off the briefing in your settings.', 'Open GeoMarket Live', 'My settings'],
+      es: ['Baja confirmada', 'Ya no recibirá el resumen diario por correo. Puede reactivarlo en cualquier momento en sus ajustes.', 'Enlace no válido', 'Este enlace de baja no se reconoce. Puede desactivar el resumen en sus ajustes.', 'Abrir GeoMarket Live', 'Mis ajustes'],
+      de: ['Abmeldung bestätigt', 'Sie erhalten den täglichen E-Mail-Überblick nicht mehr. Sie können ihn jederzeit in Ihren Einstellungen wieder aktivieren.', 'Ungültiger Link', 'Dieser Abmeldelink wird nicht erkannt. Sie können den Überblick in Ihren Einstellungen deaktivieren.', 'GeoMarket Live öffnen', 'Meine Einstellungen'],
+      it: ['Disiscrizione confermata', 'Non riceverà più il riepilogo giornaliero via e-mail. Può riattivarlo in qualsiasi momento nelle impostazioni.', 'Link non valido', 'Questo link di disiscrizione non è riconosciuto. Può disattivare il riepilogo nelle impostazioni.', 'Apri GeoMarket Live', 'Le mie impostazioni'],
+    };
+    const q = new URLSearchParams(location.search);
+    const lang = T[q.get('lang')] ? q.get('lang') : 'fr';
+    const [ok, okText, bad, badText, app, set] = T[lang];
+    const err = q.has('err');
+    document.documentElement.lang = lang;
+    document.getElementById('t').textContent = err ? bad : ok;
+    document.getElementById('p').textContent = err ? badText : okText;
+    document.getElementById('app').textContent = app;
+    document.getElementById('set').textContent = set;
+    document.title = (err ? bad : ok) + ' · GeoMarket Live';
+  </script>
+</body>
+</html>
