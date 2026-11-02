@@ -1,0 +1,3 @@
+# Netlify : les adresses de l'application (/alertes, /themes…) sont servies par index.html.
+# Les fichiers existants (rejoindre.html, assets…) restent servis tels quels.
+/*  /index.html  200
